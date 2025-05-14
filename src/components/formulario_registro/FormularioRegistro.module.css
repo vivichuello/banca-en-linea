@@ -1,0 +1,79 @@
+.formularioRegistro {
+    position: relative;
+    min-height: 70vh; /* ✅ Ocupar toda la altura disponible después del header */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 0px auto;
+    flex-grow: 1; /* ✅ Permite que el formulario ocupe el espacio restante */
+}
+
+.contenedorBoton {
+    position: fixed; /* ✅ Ahora siempre se queda en el fondo de la pantalla */
+    bottom: 20px; /* ✅ Ajuste de posición */
+    left: 0; /* ✅ Hace que ocupe toda la pantalla */
+    right: 0;
+    width: 100vw; /* ✅ Se adapta completamente al ancho */
+    display: flex;
+    justify-content: space-between; /* ✅ Permite ajustar el padding del botón y del texto */
+    padding: 25px 83vw; /* ✅ Controla el espacio entre los bordes y los elementos internos */
+    align-items: center;
+    
+}
+
+
+/* ✅ Asegurar que `form` ocupe todo el espacio */
+form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    padding-top: 50px;
+    gap: 50px; /* ✅ Aumenta la separación entre los campos */
+    align-items: center;
+    justify-content: center;
+    place-items: center;
+    flex: 1; /* ✅ Expande el formulario dentro del contenedor */
+}
+
+
+
+
+/* ✅ Mueve la opción "Volver" a la esquina inferior izquierda */
+.volver {
+    position: absolute;
+    top: 74vb;
+    left: 0px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+/* ✅ Efecto al pasar el mouse */
+.volver:hover {
+    color: #053C40;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* ✅ Fondo oscuro semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.overlayContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}

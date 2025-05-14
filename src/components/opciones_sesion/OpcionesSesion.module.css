@@ -1,0 +1,26 @@
+.opcionesSesion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.enlaceSesion {
+    color: black; 
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    padding: 5px; /* Se mantiene fijo para evitar movimiento */
+    box-sizing: border-box;
+}
+
+.enlaceSesion:hover {
+    color: rgb(60,60,60); 
+    text-decoration: underline;
+    background-color: rgba(0,0,0,0.1); 
+    border-radius: 10px;
+    transform: scale(1.05); /* Efecto sin cambiar tamaño */
+}

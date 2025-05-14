@@ -1,0 +1,57 @@
+h2 {
+    font-size: 2rem;
+}
+
+p {
+    font-size: 1.1rem;
+}
+
+.encabezado {
+    width: 100%;
+    height: 12vh;
+    background: linear-gradient(135deg, white 30%, rgb(8,95,99) 30%);
+}
+
+.navContenedor {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px;
+}
+
+.navFigura {
+    width: 20%;
+    height: auto;
+    margin-left: 5%;
+}
+
+.navLogo {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+}
+
+.datos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    padding-right: 20px;
+    justify-content: space-around;
+    gap: 7vw;
+}
+
+.regresar {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.regresar:hover {
+    text-decoration: underline;
+    color: lightgray;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 2px;
+}
