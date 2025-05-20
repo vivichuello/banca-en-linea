@@ -1,32 +1,37 @@
 @font-face {
     font-family: 'Montserrat';
-    src: url('../assets/Montserrat Alternates Regular.ttf') format('truetype'); /* ✅ Ajusta la ruta */
+    src: url('../assets/Montserrat Alternates Regular.ttf') format('truetype'); 
 }
 
-.entrada{
-    min-width: 220px;
+.entrada {
+    min-width: 300px; 
+    max-width: 100%;
     border-radius: 15px;
-    padding: 15px 60px 10px 30px;
+    padding: 15px 30px; 
     margin-bottom: 10px;
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
 }
 
 .entrada label {
     font-size: 1.3rem;
-    display: block;
+    text-align: center; 
     margin-bottom: 5px;
-    /*text-align: left;*/
+    width: 100%;
 }
 
 .entrada input {
     font-family: 'Montserrat', sans-serif !important;
-    width: 100%;
-    padding: 8px;
+    width: 100%; 
+    padding: 10px;
     border: none;
     border-bottom: 2px solid rgb(8,90,100);
     background: transparent;
     outline: none;
+    text-align: left; 
 }
 
 .entrada input:focus {

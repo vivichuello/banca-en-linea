@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CampoEntradaInicio from "../campo_entrada_inicio/CampoEntradaInicio";
 import BotonInicio from "../boton_inicio/BotonInicio";
+import { ErrorGlobal } from "../mensaje_error/MensajeError"; // ✅ Importamos ErrorGlobal
 import styles from "./FormularioRegistro.module.css";
 import { registerAPI } from "../../api/modules/index";
+import { hasFieldsErrors } from "../../utils/formValidation";
 
 function FormularioRegistro() {
     const [formData, setFormData] = useState({
@@ -19,29 +21,88 @@ function FormularioRegistro() {
 
     const [errores, setErrores] = useState({});
     const [errorGlobal, setErrorGlobal] = useState("");
-    const [registroExitoso, setRegistroExitoso] = useState(false); // ✅ Estado para el overlay
+    const [registroExitoso, setRegistroExitoso] = useState(false);
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { id, value } = e.target;
-        setFormData({ ...formData, [id]: value });
-        setErrores({ ...errores, [id]: "" });
-    };
-
+    // Formatea la fecha para enviarla en el formato correcto (ISO 8601)
     const formatBirthDate = (date) => {
         if (!date) return "";
-        const fecha = new Date(date);
-        return isNaN(fecha.getTime()) ? "" : fecha.toISOString();
+        return new Date(date).toISOString();
+    };
+
+    // Maneja el cambio de valores en los inputs
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [id]: value,
+        }));
+        setErrores((prevErrores) => ({
+            ...prevErrores,
+            [id]: "",
+        }));
     };
 
     const validarFormulario = () => {
-        let nuevosErrores = {};
+        const validaciones = {
+            first_name: ["required", { maxLength: 50 }],
+            last_name: ["required", { maxLength: 50 }], 
+            document_number: ["required", { maxLength: 20 }], 
+            birth_date: ["required"], 
+            phone_number: ["required", { maxLength: 15 }], 
+            email: ["required", "email", { maxLength: 100 }], 
+            password: ["required", { minLength: 8 }, { maxLength: 16 }], 
+            confirm_password: [{ sameAs: formData.password }, "required"]
+        };
 
-        // ✅ Validación de edad mínima (18 años)
+        let nuevosErrores = hasFieldsErrors(formData, validaciones);
+
+        //  Prioridad en "Campo requerido"
+        for (let campo in formData) {
+            if (!formData[campo].trim()) {
+                nuevosErrores[campo] = "Campo requerido";
+            }
+        }
+
+        // Validación manual para nombres (solo letras)
+        const soloLetras = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
+        if (!nuevosErrores.first_name && formData.first_name.trim() && !soloLetras.test(formData.first_name)) {
+            nuevosErrores.first_name = "Solo se permiten letras.";
+        }
+        if (!nuevosErrores.last_name && formData.last_name.trim() && !soloLetras.test(formData.last_name)) {
+            nuevosErrores.last_name = "Solo se permiten letras.";
+        }
+
+        //  Validación manual para números en `document_number` y `phone_number`
+        const soloNumeros = /^\d+$/;
+        if (!nuevosErrores.document_number && formData.document_number.trim()) {
+            if (!soloNumeros.test(formData.document_number)) {
+                nuevosErrores.document_number = "Solo se permiten números.";
+            } else if (formData.document_number.length < 6) {
+                nuevosErrores.document_number = "Debe tener al menos 6 dígitos.";
+            }
+        }
+
+        if (!nuevosErrores.phone_number && formData.phone_number.trim()) {
+            if (!soloNumeros.test(formData.phone_number)) {
+                nuevosErrores.phone_number = "Debe contener solo números.";
+            } else if (formData.phone_number.length < 10) {
+                nuevosErrores.phone_number = "Debe tener al menos 10 dígitos.";
+            }
+        }
+
+        // Validación manual para contraseña (mínimo y máximo)
+        if (!nuevosErrores.password && formData.password.trim().length > 16) {
+            nuevosErrores.password = "Debe contener máximo 16 caracteres.";
+        }
+        if (!nuevosErrores.password && formData.password.includes(" ")) {
+            nuevosErrores.password = "La contraseña no debe contener espacios.";
+        }
+
+        //  Verificación de mayoría de edad
         const fechaNacimiento = new Date(formData.birth_date);
         const hoy = new Date();
         let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-
         if (
             hoy.getMonth() < fechaNacimiento.getMonth() ||
             (hoy.getMonth() === fechaNacimiento.getMonth() && hoy.getDate() < fechaNacimiento.getDate())
@@ -51,50 +112,59 @@ function FormularioRegistro() {
 
         if (edad < 18) {
             nuevosErrores.birth_date = "Debes tener al menos 18 años.";
-            setErrorGlobal("La edad mínima para registrarse es 18 años.");
         }
 
-        // ✅ Validación de contraseñas antes de enviar el formulario
-        if (formData.password !== formData.confirm_password) {
-            nuevosErrores.confirm_password = "Las contraseñas no coinciden.";
-            setErrorGlobal("Las contraseñas deben coincidir.");
-        }
-
+        setErrores(nuevosErrores);
         return nuevosErrores;
     };
 
+
+    // Manejo del envío de formulario y comunicación con la API
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorGlobal("");
+
         let nuevosErrores = validarFormulario();
-        setErrores(nuevosErrores);
+        if (Object.values(nuevosErrores).some(error => error)) return;
 
-        if (Object.keys(nuevosErrores).length > 0) return;
+        const datosRegistro = {
+            ...formData,
+            birth_date: formatBirthDate(formData.birth_date),
+            phone_number: formData.phone_number.trim()
+        };
 
-        const datosRegistro = { ...formData, birth_date: formatBirthDate(formData.birth_date) };
+        console.log("Datos enviados a la API:", JSON.stringify(datosRegistro, null, 2));
 
         try {
             const response = await registerAPI(datosRegistro);
             console.log("Respuesta de la API:", response);
 
-            if (response.errors.length > 0) {
+            if (response.errors?.length > 0) {
                 let nuevosErroresAPI = {};
                 response.errors.forEach((error) => {
                     if (error.field) {
                         nuevosErroresAPI[error.field] = error.message;
-                    } else {
-                        setErrorGlobal(error.error);
                     }
                 });
                 setErrores(nuevosErroresAPI);
+            }
+
+            // Manejo del error cuando el usuario ya existe
+            if (response.message === "Ya existe un usuario registrado con esos datos") {
+                setErrorGlobal(response.message);
             } else if (response.message === "Usuario registrado con éxito") {
                 console.log("Registro exitoso:", response);
-                setRegistroExitoso(true); // ✅ Activamos el overlay
-                setTimeout(() => navigate("/iniciar-sesion"), 3000); // ✅ Redirigir tras 3 segundos
+                setRegistroExitoso(true);
             }
         } catch (error) {
             console.error("Error en la solicitud:", error);
-            setErrorGlobal("Ocurrió un problema al conectar con el servidor.");
+
+            // Manejo correcto de errores globales
+            if (error.response && error.response.status === 409) {
+                setErrorGlobal("Ya existe un usuario registrado con esos datos.");
+            } else {
+                setErrorGlobal("Ocurrió un problema al conectar con el servidor.");
+            }
         }
     };
 
@@ -104,8 +174,8 @@ function FormularioRegistro() {
                 <CampoEntradaInicio tipo="text" id="first_name" nombre="Nombre" placeholder="Escribe tu nombre" valor={formData.first_name} onChange={handleChange} error={errores.first_name} />
                 <CampoEntradaInicio tipo="text" id="last_name" nombre="Apellido" placeholder="Escribe tu apellido" valor={formData.last_name} onChange={handleChange} error={errores.last_name} />
                 <CampoEntradaInicio tipo="text" id="document_number" nombre="Documento" placeholder="Número de documento" valor={formData.document_number} onChange={handleChange} error={errores.document_number} />
-                <CampoEntradaInicio tipo="date" id="birth_date" nombre="Fecha de nacimiento" valor={formData.birth_date} onChange={handleChange} error={errores.birth_date} />
-                <CampoEntradaInicio tipo="tel" id="phone_number" nombre="Teléfono" placeholder="Número de teléfono" valor={formData.phone_number} onChange={handleChange} error={errores.phone_number} />
+                <CampoEntradaInicio tipo="date" id="birth_date" nombre="Fecha de nacimiento" placeholder="DD/MM/AAAA" valor={formData.birth_date} onChange={handleChange} error={errores.birth_date} />
+                <CampoEntradaInicio tipo="tel" id="phone_number" nombre="Teléfono" placeholder="Ejemplo: 584245186631" valor={formData.phone_number} onChange={handleChange} error={errores.phone_number} />
                 <CampoEntradaInicio tipo="email" id="email" nombre="Correo" placeholder="Escribe tu correo" valor={formData.email} onChange={handleChange} error={errores.email} />
                 <CampoEntradaInicio tipo="password" id="password" nombre="Contraseña" placeholder="Crea una contraseña" valor={formData.password} onChange={handleChange} error={errores.password} />
                 <CampoEntradaInicio tipo="password" id="confirm_password" nombre="Confirmar contraseña" placeholder="Repite tu contraseña" valor={formData.confirm_password} onChange={handleChange} error={errores.confirm_password} />
@@ -114,17 +184,20 @@ function FormularioRegistro() {
                 </div>
             </form>
 
-            {errorGlobal && <p className={styles.errorGlobal}>{errorGlobal}</p>}
+            <p className={styles.volver} onClick={() => navigate("/iniciar-sesion")}>Volver</p>
 
-            <p className={styles.volver} onClick={() => navigate("/iniciar-sesion")}>Volver</p> 
 
-            {registroExitoso && ( 
-                <div className={styles.overlay} onClick={() => setRegistroExitoso(false)}> 
+            {errorGlobal && <ErrorGlobal mensaje={errorGlobal} onClose={() => setErrorGlobal("")} />}
+
+            {registroExitoso && (
+                <div className={styles.overlay} onClick={() => setRegistroExitoso(false)}>
                     <div className={styles.overlayContent}>
-                        <p>🎉 ¡Usuario registrado con éxito! Redirigiendo al inicio de sesión...</p>
+                        <p id="exito"> ¡Usuario registrado exitosamente! Pulse para volver al inicio.</p>
+                        <BotonInicio id="boton-ir-inicio" texto="Ir a inicio" onClick={() => navigate("/iniciar-sesion")} />
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

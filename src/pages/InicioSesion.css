@@ -13,10 +13,10 @@
         10deg,
         rgba(255, 255, 255, 0.3),
         rgba(255, 255, 255, 0.3)
-    ), url("/src/assets/teclado(inicio).jpg"); /* Ruta corregida */
+    ), url("/src/assets/teclado(inicio).jpg"); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: calc(100vh - 12vh); /* Que ocupe toda la pantalla */
+    height: calc(100vh - 12vh); /* Que ocupe toda la pantalla sin tomar en cuenta el encabezado */
     
 }

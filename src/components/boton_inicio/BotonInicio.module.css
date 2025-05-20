@@ -1,4 +1,4 @@
-.botonInicio { /* ✅ Cambiado de .buttonInicio */
+.botonInicio { 
     all: unset;
     font-family: 'Montserrat', sans-serif;
     color: white;
@@ -13,13 +13,13 @@
     transition: background-color 0.3s ease-in-out, transform 0.2s ease, box-shadow 0.3s ease-in-out;
 }
 
-.botonInicio:hover { /* ✅ Ajustado */
+.botonInicio:hover { 
     background-color: rgb(6,75,78);
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
-.botonInicio:active { /* ✅ Ajustado */
+.botonInicio:active { 
     transform: scale(0.98);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }

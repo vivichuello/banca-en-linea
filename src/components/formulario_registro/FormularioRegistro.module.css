@@ -1,57 +1,55 @@
 .formularioRegistro {
     position: relative;
-    min-height: 70vh; /* ✅ Ocupar toda la altura disponible después del header */
+    min-height: 70vh; /* Ocupa toda la altura disponible después del header */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 80%;
     margin: 0px auto;
-    flex-grow: 1; /* ✅ Permite que el formulario ocupe el espacio restante */
+    flex-grow: 1; 
 }
 
 .contenedorBoton {
-    position: fixed; /* ✅ Ahora siempre se queda en el fondo de la pantalla */
-    bottom: 20px; /* ✅ Ajuste de posición */
-    left: 0; /* ✅ Hace que ocupe toda la pantalla */
+    position: fixed; 
+    bottom: 20px; 
+    left: 0; 
     right: 0;
-    width: 100vw; /* ✅ Se adapta completamente al ancho */
+    width: 100vw; 
     display: flex;
-    justify-content: space-between; /* ✅ Permite ajustar el padding del botón y del texto */
-    padding: 25px 83vw; /* ✅ Controla el espacio entre los bordes y los elementos internos */
+    justify-content: space-between; 
+    padding: 25px 83vw; 
     align-items: center;
     
 }
 
 
-/* ✅ Asegurar que `form` ocupe todo el espacio */
 form {
     display: grid;
     grid-template-columns: repeat(2, minmax(250px, 1fr));
     padding-top: 50px;
-    gap: 50px; /* ✅ Aumenta la separación entre los campos */
+    gap: 30px 280px; 
     align-items: center;
     justify-content: center;
     place-items: center;
-    flex: 1; /* ✅ Expande el formulario dentro del contenedor */
+    flex: 1; 
 }
 
 
 
 
-/* ✅ Mueve la opción "Volver" a la esquina inferior izquierda */
+/* Mueve la opción "Volver" a la esquina inferior izquierda */
 .volver {
     position: absolute;
     top: 74vb;
     left: 0px;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: black;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
 
-/* ✅ Efecto al pasar el mouse */
 .volver:hover {
     color: #053C40;
 }
@@ -62,7 +60,7 @@ form {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* ✅ Fondo oscuro semi-transparente */
+    background: rgba(0, 0, 0, 0.7); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,4 +74,9 @@ form {
     text-align: center;
     font-size: 18px;
     font-weight: bold;
+    font-size: 2rem;
+}
+
+#exito{
+    font-size: 2rem;
 }

@@ -4,7 +4,7 @@ import OpcionesInicio from "../components/opciones_sesion/OpcionesSesion";
 
 import "./InicioSesion.css"
 
-function InicioSesion() {  // Cambia a PascalCase
+function InicioSesion() {  
 return (
     <div className="pagina-inicio">
         <header>
@@ -19,4 +19,4 @@ return (
 
 }
 
-export default InicioSesion;  // Exporta con el mismo nombre
+export default InicioSesion; 
