@@ -22,6 +22,8 @@ h2 {
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .input_container label {
@@ -64,4 +66,5 @@ h2 {
     color: red;
     margin: 0;
     padding: 0;
+    text-align: center;
 }

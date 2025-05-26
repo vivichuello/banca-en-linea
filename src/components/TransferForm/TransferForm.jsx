@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { findUserByAccountNumberAPI, whoAmIAPI, getBalanceAPI } from "../../api/modules/user";
 import { createTransferAPI } from "../../api/modules/movements";
 import styles from './TransferForm.module.css';
+import { ErrorGlobal} from "../mensaje_error/MensajeError";
+import { SuccessMessage } from "../SuccessMessage/SuccessMessage";
 
 export const TransferForm = () => {
 
@@ -17,6 +19,7 @@ export const TransferForm = () => {
     })
     const [userAccountNUmber, setUserAccountNumber] = useState("");
     const [userBalance, setUserBalance] = useState("");
+    const [successMessage, setsuccessMessage] = useState(null)
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -133,12 +136,14 @@ export const TransferForm = () => {
             description: ""
         });
         setMessage("");
+        setsuccessMessage(null)
     };
     // 3- Funcion para manejar el envio del formulario
 
     const handleTransfer = async (e) => {
         e.preventDefault();
         setMessage(""); // Reiniciar mensaje
+        setsuccessMessage(null)
 
         if (!validateFields()) {
             return; // Si la validación falla, no continuar
@@ -156,9 +161,6 @@ export const TransferForm = () => {
 
             // Si el usuario existe, procedemos a crear la transferencia
 
-            // Por aqui se deberia validar el monto es menor al saldo disponible
-            // Verificar que el numero de cuenta no sea el mismo que el del usuario logueado
-
             const transferData = {
                 amount: parseFloat(amount),
                 account_number: accountNumber,
@@ -166,7 +168,12 @@ export const TransferForm = () => {
             }
 
             const transferResponse = await createTransferAPI(transferData);
-            setMessage("Transferencia creada con exito" + transferResponse.id)
+            setsuccessMessage({
+                amount: transferResponse.amount,
+                createdAt: transferResponse.created_at,
+                id: transferResponse.id
+            });
+
         } catch (error) {
             console.error("Error creando transferencia:", error);
             setMessage("Error creando transferencia");
@@ -216,7 +223,15 @@ export const TransferForm = () => {
                     <button type="submit" >Transferir</button>
                     <button type="button" onClick={handleClear}>Limpiar</button>
                 </div>
-                {message && <p>{message}</p>}
+                {successMessage && (
+                    <SuccessMessage
+                    amount={successMessage.amount}
+                    createdAt={successMessage.createdAt}
+                    id={successMessage.id}
+                    onClose={() => setsuccessMessage(null)}
+                    />
+                )}
+                {message && <ErrorGlobal mensaje={message} onClose={() => setMessage("")}/>}
             </form>
         </div>
     )
