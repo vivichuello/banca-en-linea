@@ -4,6 +4,7 @@ import DataTables from 'react-data-table-component';
 import { getMovementsAPI } from '../../api/modules/movements';
 import { getJWT } from '../../utils/localStorage';
 import styles from './MovementsList.module.css';
+import { ErrorGlobal } from '../mensaje_error/MensajeError';
 // 2 - Declarar columnas
 
 const columns = [
@@ -58,7 +59,7 @@ const customStyles = {
     },
     cells: {
         style: {
-            textAlign: 'center', 
+            textAlign: 'center',
         },
     },
 };
@@ -71,8 +72,8 @@ export const MovementsList = () => {
     const [movements, setMovements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const [totalRows, setTotalRows] = useState(0);
     const [multiplier, setMultiplier] = useState(0);
 
@@ -90,7 +91,7 @@ export const MovementsList = () => {
 
                     //Declaramos parametros
                     let apiParams = {
-                        page: page + 1,
+                        page,
                         page_size: pageSize,
                     }
 
@@ -102,12 +103,19 @@ export const MovementsList = () => {
                     //LLamamos a la funcion getMovementsAPI
                     const response = await getMovementsAPI(apiParams)
 
-                    //Si la respuesta es correcta, actualizamos el estado de movements y totalRows
-                    setMovements(response.data);
-                    setTotalRows(Number(response.headers["x-pagination-total-count"]))
+                    const totalCountHeader = response.headers["x-pagination-total-count"];
+                    const data = response.data;
+
+                    if (totalCountHeader !== undefined && totalCountHeader !== null && Array.isArray(data) && data.length > 0) {
+                        setMovements(data);
+                        setTotalRows(Number(totalCountHeader));
+                        setError(null); 
+                    } else {
+                        setError('No se pudo obtener la información de movimientos. Intente aumentando el número de movimientos por página o revisando los filtros aplicados.');
+                    }
 
                 } catch (error) {
-                    setError(error.message);
+                    setError('No se pudo obtener la información de movimientos. Intente aumentando el número de movimientos por página o revisando los filtros aplicados.');
                 }
                 finally {
                     setLoading(false);
@@ -128,7 +136,11 @@ export const MovementsList = () => {
             <div className={styles.filter}>
                 <label>
                     Tipo de movimiento:
-                    <select onChange={(e) => setMultiplier(Number(e.target.value))}>
+                    <select onChange={(e) => {
+                        setMultiplier(Number(e.target.value))
+                        setPage(1)
+                    }}
+                    >
                         <option value={0}>Todos</option>
                         <option value={1}>Créditos</option>
                         <option value={-1}>Débitos</option>
@@ -137,16 +149,20 @@ export const MovementsList = () => {
             </div>
 
             {loading && <p>Cargando...</p>} {/* Si loading es true, mostramos un mensaje de carga */}
-            {error && <p>Error: {error}</p>} {/* Si hay un error, mostramos el mensaje de error */}
-    
+            {error && <ErrorGlobal mensaje={error} onClose={() => setError(null)}/>} {/* Si hay un error, mostramos el mensaje de error */}
+
             <DataTables
+                key={`${multiplier}-${pageSize}`}
                 columns={columns}
                 data={movements}
                 pagination
                 paginationServer
                 paginationTotalRows={totalRows}
                 onChangePage={setPage}
-                onChangeRowsPerPage={setPageSize}
+                onChangeRowsPerPage={newPageSize => {
+                    setPageSize(newPageSize);
+                    setPage(1);
+                }}
                 paginationPerPage={pageSize}
                 paginationRowsPerPageOptions={[5, 10, 20, 50]}
                 customStyles={customStyles}>
