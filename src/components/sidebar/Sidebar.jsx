@@ -8,10 +8,9 @@ export const Sidebar = () => {
     return (
         <nav className={styles.sidebar_nav}>
             <ul>
-                <li>Inicio</li>
-                <li>Movimientos</li>
+                <li onClick={() => navigate("/home")} style= {{cursor: "pointer"}}>Inicio</li>
                 <li onClick={() => navigate("/transferencias")} style= {{cursor: "pointer"}}>Transferencias</li>
-                <li>Pago de matrículas</li>
+                <li>Gestion Usuario</li>
             </ul>
         </nav>
     )
