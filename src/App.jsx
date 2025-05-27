@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import InicioSesion from "./pages/InicioSesion";
 import Registro from "./pages/Registro";
 import Home from "./pages/Home";
+import Change from "./pages/ChangePassword";
 import  Transferencias from "./pages/Transferencias.jsx";
 
 function App() {

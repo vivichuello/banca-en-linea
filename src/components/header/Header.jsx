@@ -23,6 +23,5 @@ export const Header = () => {
             </figure>
             <button className={styles.header_btn_logout} onClick={handleLogout}>Cerrar Sesión</button>
         </header>
-
     )
 }

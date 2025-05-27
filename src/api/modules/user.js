@@ -3,6 +3,10 @@ import { getJWT } from "../../utils/localStorage"
 
 export const loginAPI = (loginValues) => apiHttp("POST", `/v1/public/client/user/login`, loginValues)
 
+export const registerAPI = (registrValues) => apiHttp("POST", `/v1/public/client/user/register`, registrValues)
+
+export const changePasswordAPI = (changePasswordValues) => apiHttp("PATCH", `/v1/client/user/password`, changePasswordValues)
+
 export const whoAmIAPI = async () => {
     const token = getJWT();
     if (!token) {
@@ -28,9 +32,6 @@ export const whoAmIAPI = async () => {
         return null;
     }
 };
-
-export const registerAPI = (registrValues) => apiHttp("POST", `/v1/public/client/user/register`, registrValues)
-
 
 export const getBalanceAPI = async () => {
     const token = getJWT(); // Obtener el JWT almacenado en localStorage
