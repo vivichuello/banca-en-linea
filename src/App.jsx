@@ -5,6 +5,7 @@ import InicioSesion from "./pages/InicioSesion";
 import Registro from "./pages/Registro";
 import Home from "./pages/Home";
 import Change from "./pages/ChangePassword";
+import  Transferencias from "./pages/Transferencias.jsx";
 
 function App() {
     return (
@@ -14,7 +15,7 @@ function App() {
                 <Route path="/iniciar-sesion" element={<InicioSesion />} /> 
                 <Route path="/registrarse" element={<Registro />} /> 
                 <Route path="/home" element={<Home />} /> 
-                
+                <Route path="/transferencias" element={<Transferencias />} />
             </Routes>
         </Router>
     );
