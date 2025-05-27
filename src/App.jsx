@@ -16,6 +16,7 @@ function App() {
                 <Route path="/registrarse" element={<Registro />} /> 
                 <Route path="/home" element={<Home />} /> 
                 <Route path="/transferencias" element={<Transferencias />} />
+                <Route path="/cambiar-contrasena" element={<Change />} />
             </Routes>
         </Router>
     );
