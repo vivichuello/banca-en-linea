@@ -16,7 +16,6 @@ export const Header = () => {
             navigate('/iniciar-sesion');
         }
     }
-
     return (
         <header className={styles.header}>
             <figure>

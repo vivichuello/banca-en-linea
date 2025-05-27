@@ -5,6 +5,7 @@ import { getMovementsAPI } from '../../api/modules/movements';
 import { getJWT } from '../../utils/localStorage';
 import styles from './MovementsList.module.css';
 import { ErrorGlobal } from '../mensaje_error/MensajeError';
+
 // 2 - Declarar columnas
 
 const columns = [
