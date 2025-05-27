@@ -1,0 +1,78 @@
+.overlayEdit {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1001; /* 📌 Aseguramos que esté encima del fondo */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlayEditWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* 🔹 Negro con 50% de opacidad */
+  z-index: 999; /* 🔹 Detrás del `.overlayEdit`, pero sobre el resto de la página */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+/* 📌 Contenedor del formulario de edición */
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+/* 📌 Campos de entrada */
+.editForm input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* 📌 Botones alineados en una misma fila */
+.editButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.editButtons button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.editButtons .save {
+  background-color: #085f63;
+  color: white;
+  border: none;
+}
+
+.editButtons .cancel {
+  background-color: #ccc;
+  color: black;
+  border: none;
+}
+

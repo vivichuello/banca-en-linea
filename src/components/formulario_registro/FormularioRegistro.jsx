@@ -159,13 +159,23 @@ function FormularioRegistro() {
         } catch (error) {
             console.error("Error en la solicitud:", error);
 
-            // Manejo correcto de errores globales
-            if (error.response && error.response.status === 409) {
-                setErrorGlobal("Ya existe un usuario registrado con esos datos.");
+            if (error.response) {
+                // El servidor respondió con un error
+                const msg = error.response.data?.message || "Error inesperado del servidor.";
+                if (error.response.status === 409) {
+                setErrorGlobal(msg || "Ya existe un usuario registrado con esos datos.");
+                } else {
+                setErrorGlobal(msg);
+                }
+            } else if (error.request) {
+                // La solicitud se envió pero no hubo respuesta
+                setErrorGlobal("No se pudo conectar con el servidor.");
             } else {
-                setErrorGlobal("Ocurrió un problema al conectar con el servidor.");
+                // Otro error
+                setErrorGlobal("Error: " + error.message);
             }
-        }
+            }
+
     };
 
     return (

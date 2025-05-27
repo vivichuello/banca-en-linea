@@ -1,0 +1,145 @@
+/* Contenedor de cada contacto */
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #49beb7; /* 🔹 Color de la página */
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+
+  /* 📌 Evitamos que el contacto se expanda demasiado */
+  width: auto; /* 🔹 Se adapta sin ocupar demasiado espacio */
+  flex-grow: 0; /* 🔹 Evita expansión innecesaria */
+}
+
+.contactItem:hover {
+  background-color: #e6f7f7;
+}
+
+/* Alias, descripción y opciones distribuidos proporcionalmente */
+.contactItemDisplay {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.contactItemDisplay span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Alias ocupa el 30% de la fila */
+.alias {
+  flex: 30%;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Descripción ocupa el 50% de la fila */
+.description {
+  flex: 50%;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Opciones ocupa el 20% de la fila */
+.itemButtons {
+  flex: 20%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Botones de acción */
+.itemButtons button {
+  background-color: #085f63; /* Color de la página */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.itemButtons button:hover {
+  background-color: #49beb7;
+}
+    
+/* 🎉 Overlay de éxito */
+.overlayExito {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.overlayExitoContenido {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 300px;
+}
+
+.overlayExitoContenido p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: rgb(0, 0, 0);
+}
+
+.overlayExitoContenido button {
+  background-color: green;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.overlayExitoContenido button:hover {
+  background-color: darkgreen;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/Montserrat Alternates Regular.ttf') format('truetype'); 
+}
+
+
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.overlayError {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.overlayErrorContenido {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px red;
+  text-align: center;
+}

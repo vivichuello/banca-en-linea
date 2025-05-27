@@ -54,51 +54,45 @@ function FormularioInicio() {
 
 
 
-    // Manejo del envío de formulario y autenticación
-    const handleSubmit = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
+        setErrores({});
         setErrorGlobal("");
 
-        let nuevosErrores = validarFormulario();
-        if (Object.values(nuevosErrores).some(error => error)) return; 
-
-        const datosLogin = { email: formData.usuario, password: formData.password };
-
-        console.log("Datos enviados a la API:", JSON.stringify(datosLogin, null, 2));
+        if (!validarFormulario()) return;
 
         try {
-          const datosLogin = { email: formData.usuario, password: formData.password };
-          const response = await loginAPI(datosLogin);
-          console.log("Respuesta de la API:", response);
+            await updateContactAPI(contact.id, {
+            alias: formData.alias,
+            description: formData.descripcion,
+            });
 
-          if (response.data && response.data.jwt) {
-              setJWT(response.data.jwt);
-              navigate("/home");
-          }
+            setIsEditing(false);
+            setMensajeExito("Contacto actualizado exitosamente.");
+            setMostrarOverlayExito(true);
+        } catch (error) {
+            console.error("Error al actualizar:", error);
 
-          if (response.message === "Usuario no autorizado, credenciales incorrectas") {
-              setErrorGlobal("Correo o contraseña incorrectos.");
-          } else if (response.errors) {
-              let nuevosErroresAPI = {};
-              response.errors.forEach((error) => {
-                  if (error.field) {
-                      nuevosErroresAPI[error.field] = error.message;
-                  }
-              });
-              setErrores(nuevosErroresAPI);
-          }
-      } catch (error) {
-          console.error("Error en la solicitud:", error);
+            if (error.response) {
+            const { status, data } = error.response;
 
-          //  Si la API responde con 401, mostramos el mensaje correcto
-          if (error.response && error.response.status === 401) {
-              setErrorGlobal("Correo o contraseña incorrectos.");
-          } else {
-              setErrorGlobal("Ocurrió un problema al conectar con el servidor.");
-          }
-      }
+            if (status === 400) {
+                if (data.message === "Ya estás usando ese alias en otro contacto") {
+                setErrores((prev) => ({ ...prev, alias: data.message }));
+                } else if (data.message === "Ya tienes agregado a este contacto") {
+                setErrorGlobal(data.message);
+                } else {
+                setErrorGlobal("Error de validación. Revisa los datos ingresados.");
+                }
+            } else {
+                setErrorGlobal("Error inesperado al actualizar el contacto.");
+            }
+            } else {
+            setErrorGlobal("No se pudo conectar al servidor.");
+            }
+        }
+        };
 
-    };
 
     return (
         <div className={styles.formularioInicio}>
